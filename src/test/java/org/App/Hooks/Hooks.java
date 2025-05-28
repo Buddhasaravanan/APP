@@ -24,9 +24,9 @@ public class Hooks {
     }
 
     @Before
-    public void setupBrowser() {
+    public void setupBrowser() throws IOException {
         System.out.println("Launching browser");
-        System.out.println("Loading config for: " + properties.getProperty("env"));
+        System.out.println("Loading config for: " + Base.getProperties().getProperty("appurl"));
     }
 
     @AfterStep
@@ -56,7 +56,7 @@ public class Hooks {
     @AfterAll
     public static void afterAll() {
         Base.getLogger().info("Closing browser");
-        Base.getdriver().quit();
+        //Base.getdriver().quit();
         System.out.println("Test execution completed");
     }
 }

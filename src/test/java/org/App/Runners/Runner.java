@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
                 //"tech.grasshopper.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
                 "timeline:target/imeline" // For parallel execution
         },
-        tags = "@Sanity", // More flexible tag expressions
+        tags = "@Sanity-positive", // More flexible tag expressions
         dryRun = false,
         monochrome = true,
         publish = true,
