@@ -1,4 +1,4 @@
-Feature: Login Test
+Feature: Login Functionality
 
 
   @Sanity-negative
