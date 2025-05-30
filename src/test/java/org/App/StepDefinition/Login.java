@@ -61,6 +61,7 @@ public class Login
     public void the_user_select_the_company()
     {
         Loginpage lp = new Loginpage(Base.getdriver()); lp.selectCompany();
+        lp.closePopup();
     }
 
     @Then("the user should navigate to dashboard page")
