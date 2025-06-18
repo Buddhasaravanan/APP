@@ -1,5 +1,6 @@
 package org.App.Pages;
 
+import freemarker.debug.Debugger;
 import org.App.Factory.Base;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
@@ -63,7 +64,7 @@ public class Opportunity_Quote_Page  extends Basepage
         @FindBy(xpath = "//span[contains(text(), 'Won')]")
         private WebElement wonbtn;
 
-        @FindBy(xpath = "(//span[contains(text(), 'Service')])[2]")
+        @FindBy(xpath = "//span[contains(text(), 'Prewire Only')]")
         private WebElement service;
 
         @FindBy(xpath = "//span[contains(text(), 'Single Family Detached - Production')]")
@@ -94,7 +95,7 @@ public class Opportunity_Quote_Page  extends Basepage
     @FindBy(xpath = "//div[@id='item_0']")
     private WebElement firstItem;
 
-    @FindBy(xpath = "//span[contains(text(),'Add to quote')]")
+    @FindBy(xpath = "//span[contains(text(), 'Add  to quote')]")
     private WebElement addToQuote;
 
     @FindBy(xpath = "//div[@class='cdk-overlay-pane']")
@@ -244,7 +245,8 @@ public class Opportunity_Quote_Page  extends Basepage
         public void selectProjectType() {
             try {
                 clickWithWait(selectProjectType);
-                clickWithWait(service);
+                Thread.sleep(1000);
+                service.click();
             } catch (Exception e) {
                 handleException("Error selecting project type", e);
             }

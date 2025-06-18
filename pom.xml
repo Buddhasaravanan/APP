@@ -10,17 +10,23 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>23</maven.compiler.source>
-    <maven.compiler.target>23</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
 
     <!-- Updated dependency versions -->
-    <selenium.version>4.16.1</selenium.version>
-    <cucumber.version>7.15.0</cucumber.version>
-    <junit.version>5.10.2</junit.version>
-    <extentreports.version>5.1.1</extentreports.version>
-    <log4j.version>2.23.1</log4j.version>
-    <webdrivermanager.version>5.6.3</webdrivermanager.version>
-    <extentreports.cucumber.adapter.version>2.0.0</extentreports.cucumber.adapter.version>
+    <selenium.version>4.26.0</selenium.version>
+    <cucumber.version>7.18.1</cucumber.version>
+    <junit.version>5.11.3</junit.version>
+    <junit.platform.version>1.11.3</junit.platform.version>
+    <extentreports.version>5.1.2</extentreports.version>
+    <log4j.version>2.24.1</log4j.version>
+    <webdrivermanager.version>5.9.2</webdrivermanager.version>
+
+    <!-- Allure versions -->
+    <allure.version>2.29.0</allure.version>
+    <allure.cucumber.version>2.29.0</allure.cucumber.version>
+    <allure.maven.version>2.14.0</allure.maven.version>
+    <aspectj.version>1.9.21</aspectj.version>
   </properties>
 
   <dependencies>
@@ -31,11 +37,14 @@
       <version>${selenium.version}</version>
     </dependency>
 
+    <!-- WebDriverManager -->
+    <dependency>
+      <groupId>io.github.bonigarcia</groupId>
+      <artifactId>webdrivermanager</artifactId>
+      <version>${webdrivermanager.version}</version>
+    </dependency>
 
-
-    <!-- Cucumber -->
-
-    <!-- Add these dependencies under the Cucumber section -->
+    <!-- Cucumber Dependencies -->
     <dependency>
       <groupId>io.cucumber</groupId>
       <artifactId>cucumber-java</artifactId>
@@ -57,29 +66,29 @@
       <scope>test</scope>
     </dependency>
 
-
+    <!-- JUnit Platform -->
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-suite</artifactId>
-      <version>1.10.2</version>
+      <version>${junit.platform.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-suite-api</artifactId>
-      <version>1.10.2</version>
+      <version>${junit.platform.version}</version>
       <scope>test</scope>
     </dependency>
 
-
-    <!-- JUnit 5 - Corrected coordinates -->
+    <!-- JUnit 5 -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
@@ -87,7 +96,27 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Extent Reports -->
+    <!-- Allure Reporting Dependencies -->
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-cucumber7-jvm</artifactId>
+      <version>${allure.cucumber.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-junit5</artifactId>
+      <version>${allure.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-java-commons</artifactId>
+      <version>${allure.version}</version>
+    </dependency>
+
+    <!-- Extent Reports (keeping both for flexibility) -->
     <dependency>
       <groupId>com.aventstack</groupId>
       <artifactId>extentreports</artifactId>
@@ -97,17 +126,16 @@
     <dependency>
       <groupId>tech.grasshopper</groupId>
       <artifactId>extentreports-cucumber7-adapter</artifactId>
-      <version>1.14.0</version>
+      <version>1.10.0</version>
     </dependency>
 
+
+    <!-- Protocol Buffers -->
     <dependency>
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
-      <version>3.25.3</version>
+      <version>4.28.3</version>
     </dependency>
-
-
-
 
     <!-- Logging -->
     <dependency>
@@ -115,11 +143,40 @@
       <artifactId>log4j-core</artifactId>
       <version>${log4j.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.4.14</version>
+    </dependency>
+
+
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
       <version>${log4j.version}</version>
     </dependency>
+
+    <!-- Additional utilities -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.17.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.17.0</version>
+    </dependency>
+
+      <dependency>
+        <groupId>org.aspectj</groupId>
+        <artifactId>aspectjweaver</artifactId>
+        <version>${aspectj.version}</version>
+      </dependency>
+
+
   </dependencies>
 
   <build>
@@ -130,23 +187,59 @@
     </testResources>
 
     <plugins>
-
+      <!-- Compiler Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
+        <version>3.13.0</version>
         <configuration>
-          <release>23</release>  <!-- Preferred for JDK 9+ -->
+          <release>21</release>
         </configuration>
       </plugin>
 
-      <!-- Updated Surefire Plugin -->
+      <!-- Surefire Plugin for running tests -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.2.5</version> <!-- Updated to latest stable -->
+        <version>3.5.1</version>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+          <argLine>
+            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+          </argLine>
+          <systemPropertyVariables>
+            <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+
+      <!-- Allure Maven Plugin -->
+      <plugin>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-maven</artifactId>
+        <version>${allure.maven.version}</version>
+        <configuration>
+          <reportVersion>${allure.version}</reportVersion>
+          <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
+          <reportDirectory>${project.build.directory}/allure-report</reportDirectory>
+        </configuration>
+      </plugin>
+
+      <!-- Failsafe Plugin for integration tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>3.5.1</version>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+          <argLine>
+            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+          </argLine>
+          <systemPropertyVariables>
+            <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+          </systemPropertyVariables>
+        </configuration>
       </plugin>
     </plugins>
   </build>
-
 </project>
