@@ -1,6 +1,5 @@
 package org.App.Pages;
 
-import freemarker.debug.Debugger;
 import org.App.Factory.Base;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
@@ -61,10 +60,7 @@ public class Opportunity_Quote_Page  extends Basepage
         @FindBy(id = "btn-create-opportunity")
         private WebElement create;
 
-        @FindBy(xpath = "//span[contains(text(), 'Won')]")
-        private WebElement wonbtn;
-
-        @FindBy(xpath = "//span[contains(text(), 'Prewire Only')]")
+        @FindBy(xpath = "(//span[contains(text(), 'Service')])[2]")
         private WebElement service;
 
         @FindBy(xpath = "//span[contains(text(), 'Single Family Detached - Production')]")
@@ -95,7 +91,7 @@ public class Opportunity_Quote_Page  extends Basepage
     @FindBy(xpath = "//div[@id='item_0']")
     private WebElement firstItem;
 
-    @FindBy(xpath = "//span[contains(text(), 'Add  to quote')]")
+    @FindBy(xpath = "//span[contains(text(),'Add to quote')]")
     private WebElement addToQuote;
 
     @FindBy(xpath = "//div[@class='cdk-overlay-pane']")
@@ -229,6 +225,14 @@ public class Opportunity_Quote_Page  extends Basepage
     @FindBy(xpath = "//span[contains(text(), 'Service Agreements')]")
     private WebElement recommendedPlan;
 
+    @FindBy(xpath = "//h1[contains (text(),'This is embarrassing...')]")
+    private WebElement crash;
+
+    @FindBy(xpath = "//span[contains (text(),'Try again')]")
+    private WebElement tryagain;
+
+
+
 
         public void clickOpportunity() {
             clickWithWait(opportunities);
@@ -245,8 +249,7 @@ public class Opportunity_Quote_Page  extends Basepage
         public void selectProjectType() {
             try {
                 clickWithWait(selectProjectType);
-                Thread.sleep(1000);
-                service.click();
+                clickWithWait(service);
             } catch (Exception e) {
                 handleException("Error selecting project type", e);
             }
@@ -281,13 +284,23 @@ public class Opportunity_Quote_Page  extends Basepage
         public void clickCreateOpportunity() {
             try {
                 clickWithWait(create);
+
+                if(wonBtn.isDisplayed())
+                {
+                    System.out.println("No Crash occurs");
+                }
+                else
+                {
+                    clickWithWait(tryagain);
+                    System.out.println("BUG: Crash occurs");
+                }
             } catch (Exception e) {
                 handleException("Error creating opportunity", e);
             }
         }
 
         public boolean isOpportunityCreated() {
-            return isElementDisplayed(wonbtn);
+            return isElementDisplayed(wonBtn);
         }
 
         public void selectResidentialBuildingType() {
