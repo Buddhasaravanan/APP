@@ -1,5 +1,6 @@
 package org.App.StepDefinition;
 
+import dev.failsafe.internal.util.Assert;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.qameta.allure.Allure;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 
 public class Change_Order extends Base
 {
+    private String actualToastMessage;
     private byte[] takeScreenshotAsBytes() {
         return ((TakesScreenshot) Base.getdriver()).getScreenshotAs(OutputType.BYTES);
     }
@@ -109,30 +111,53 @@ public class Change_Order extends Base
     @When("user add item to change order")
     public void user_add_item_to_change_order()
     {
-
+        op.searchItem("coitem");
+        op.additem();
     }
     @Then("Validate add item to CO")
-    public void validate_add_item_to_co() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+    public void validate_add_item_to_co()
+    {
+        try {
+            actualToastMessage = op.getToastMessage();
+            Assert.isTrue(actualToastMessage.contains("Item added"), "Toast message not matching");
+        } catch (Exception e) {
+            Assert.isTrue(false, "Toast message not matching");
+        }
     }
     @When("user copy item to all location")
-    public void user_copy_item_to_all_location() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+    public void user_copy_item_to_all_location()
+    {
+        co.copyItemToAllLocations();
     }
     @Then("Validate copy item")
-    public void validate_copy_item() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+    public void validate_copy_item()
+    {
+        try {
+            boolean actualStatus = co.verifyCopySuccess();
+
+            Allure.addAttachment("Status Validation",
+                    "text/plain",
+                    "Expected: " + "Items copied to locations" + "\n" +
+                            "Actual: " + actualStatus);
+
+            Assertions.assertEquals("Copy items status text mismatch",
+                    "Items copied to locations",
+                    String.valueOf(actualStatus));
+
+        } catch (Exception e) {
+            Allure.addAttachment("Failure Details", "text/plain",
+                    "Status validation failed: " + e.getMessage());
+            throw new AssertionError("Failed to validate removed status", e);
+        }
     }
     @When("user replace the item")
-    public void user_replace_the_item() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+    public void user_replace_the_item() throws IOException
+    {
+       co.replaceItem("replaceitem");
     }
     @Then("Validate replace item")
-    public void validate_replace_item() {
+    public void validate_replace_item()
+    {
         // Write code here that turns the phrase above into concrete actions
         throw new io.cucumber.java.PendingException();
     }
