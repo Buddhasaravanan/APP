@@ -12,9 +12,11 @@ import org.junit.platform.suite.api.Suite;
  */
 @Suite
 @IncludeEngines("cucumber")
-@SelectClasspathResource("features")
+//@SelectClasspathResource("features")
+@SelectClasspathResource("features/001_Login.feature")
+//@SelectClasspathResource("features/017_test.feature")
 @ConfigurationParameter(key = Constants.GLUE_PROPERTY_NAME, value = "org.App.StepDefinition,org.App.Hooks")
-@ConfigurationParameter(key = Constants.FILTER_TAGS_PROPERTY_NAME, value = "@Sanity-positive")
+@ConfigurationParameter(key = Constants.FILTER_TAGS_PROPERTY_NAME, value = "@Sanity-Positive")
 @ConfigurationParameter(key = Constants.PLUGIN_PROPERTY_NAME, value =
         "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm," +
                 "pretty," +

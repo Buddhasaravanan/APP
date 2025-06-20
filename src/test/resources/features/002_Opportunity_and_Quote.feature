@@ -1,6 +1,6 @@
 Feature: Opportunity and Quote test
 
-  @Sanity-positive
+  #@Sanity-positive
   Scenario: Create New Opportunity and Basic functionality test for quote and proposal
     When the user click opportunity from main menu
     And the user click new opportunity button

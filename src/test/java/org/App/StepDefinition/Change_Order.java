@@ -23,6 +23,7 @@ public class Change_Order extends Base
 
     ChangeOrder co = new ChangeOrder(Base.getdriver());
     Opportunity_Quote_Page op = new Opportunity_Quote_Page(Base.getdriver());
+
     @When("user navigate change order")
     public void user_navigate_change_order()
     {

@@ -7,14 +7,22 @@ import io.qameta.allure.*;
 
 import org.App.Factory.Base;
 import org.App.Pages.Loginpage;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Objects;
 
 @Epic("User Authentication")
 @Feature("Login Functionality")
-public class Login {
+public class Login
+{
+    private byte[] takeScreenshotAsBytes() {
+        return ((TakesScreenshot) Base.getdriver()).getScreenshotAs(OutputType.BYTES);
+    }
 
     @Given("the user should be navigate to login page")
     @Severity(SeverityLevel.CRITICAL)
@@ -75,13 +83,54 @@ public class Login {
         lp.closePopup();
     }
 
+
     @Then("the user should navigate to dashboard page")
     @Severity(SeverityLevel.BLOCKER)
     @Description("Verify that dashboard page is displayed after login")
     @Step("Verify dashboard page is displayed")
     public void the_user_should_navigate_to_dashboard_page() {
         Loginpage lp = new Loginpage(Base.getdriver());
-        new WebDriverWait(Base.getdriver(), Duration.ofSeconds(30)).until(wd -> lp.isDashboardDisplayed());
-        System.out.println("Login successful");
+        //new WebDriverWait(Base.getdriver(), Duration.ofSeconds(30)).until(wd -> lp.isDashboardDisplayed());
+        //System.out.println("Login successful");
+        try {
+
+            new WebDriverWait(Base.getdriver(), Duration.ofSeconds(30))
+                    .until(wd -> {
+                        try {
+                            boolean isDisplayed = lp.isDashboardDisplayed();
+                            if (!isDisplayed) {
+                                Allure.addAttachment("Dashboard Check", "text/plain",
+                                        "Dashboard was not displayed when expected");
+                            }
+                            return isDisplayed;
+                        } catch (Exception e) {
+                            Allure.addAttachment("Error", "text/plain",
+                                    "Exception while checking dashboard: " + e.getMessage());
+                            throw e;
+                        }
+                    });
+
+
+            String currentUrl = Base.getdriver().getCurrentUrl();
+            if (!currentUrl.contains("dashboard")) {
+                Allure.addAttachment("URL Validation", "text/plain",
+                        "Expected URL to contain 'dashboard' but was: " + currentUrl);
+            }
+
+            Allure.step("Login successful - Dashboard page is displayed correctly", () -> {
+                Allure.addAttachment("Page Title", "text/plain", Objects.requireNonNull(Base.getdriver().getTitle()));
+                Allure.addAttachment("Current URL", "text/plain", currentUrl);
+            });
+
+            System.out.println("Login successful - Dashboard verification passed");
+
+        } catch (Exception e) {
+
+            Allure.addAttachment("Failure Screenshot",
+                    new ByteArrayInputStream(((TakesScreenshot) Base.getdriver()).getScreenshotAs(OutputType.BYTES)));
+            Allure.addAttachment("Error Details", "text/plain",
+                    "Failed to verify dashboard page: " + e.getMessage());
+            throw new AssertionError("Dashboard page verification failed", e);
+        }
     }
 }
